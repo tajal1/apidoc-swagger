@@ -3,44 +3,45 @@ classDiagram
 
 class IDocumentGenerator {
     <<interface>>
-    +docGenerator()
+    +docGenerator() void
 }
 
 class IDocument {
     <<interface>>
-    +document()
+    +document() void
 }
 
 class IJSONDoc {
     <<interface>>
-    +projectInfo()
-    +body()
-    +schemas()
+    +projectInfo() void
+    +body() void
+    +schemas() void
 }
 
 IDocumentGenerator <|.. DocumentGenerator : implements
 
 class DocumentGenerator {
     -strategy: IDocumentGenerator
-    +docGenerator() IDocumentGenerator
+    +setStrategy(strategy: IDocumentGenerator) void
+    +docGenerator() void
 }
 
 IDocument <|.. Swagger : implements
 IJSONDoc --* Swagger : composition
 class Swagger {
-    +docGenerator() IDocumentGenerator
+    +docGenerator() void
 }
 
 IDocument <|.. Pdf : implements
 IJSONDoc --* Pdf : composition
 class Pdf {
-    +document() IDocumentGenerator
+    +document() void
 }
 
 IDocument <|.. Postman : implements
 IJSONDoc --* Postman : composition
 class Postman {
-    +document() IDocumentGenerator
+    +document() void
 }
 
 Swagger --|> IDocumentGenerator : strategy
@@ -53,45 +54,56 @@ Schemas --* JSONDoc : composition
 Body --* JSONDoc : composition
 class JSONDoc {
     +constructor(config: object)
-    +projectInfo()
-    +body()
-    +schemas()
-    +JSONDocument():IDocumentGenerator
+    +projectInfo() void
+    +body() void
+    +schemas() void
+    +JSONDocument(): IDocumentGenerator
 }
-
 
 class IProjectInfo {
     <<interface>>
-    +projectInfo()
+    +projectInfo() void
 }
 
 IProjectInfo <|.. ProjectInfo : implements
 class ProjectInfo{
-    +projectInfo()
+    +projectInfo() void
 }
 
 class ISchemas {
     <<interface>>
-    +schemas()
+    +schemas() void
 }
 
 ISchemas <|.. Schemas : implements
 class Schemas{
-    +schemas()
+    +schemas() void
 }
 
 class IBody {
     <<interface>>
-    +routes()
-    +reqBody()
-    +resBody()
+    +routes() void
+    +reqBody() void
+    +resBody() void
 }
 
 IBody <|.. Body : implements
 class Body{
-    +routes()
-    +reqBody()
-    +resBody()
+    +routes() void
+    +reqBody() void
+    +resBody() void
 }
 
+class IConverter {
+    <<interface>>
+    +convert() void
+}
+
+IConverter <|.. Converter : implements
+Swagger --|> IConverter : Inheritance
+Pdf --|> IConverter : Inheritance
+Postman --|> IConverter : Inheritance
+class Converter {
+    +convert() void
+}
 ```
